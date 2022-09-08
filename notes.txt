@@ -1,0 +1,119 @@
+Stratego Game
+
+MVC Architecture:
+    Model - Game state
+    View - Text to start
+    Controller - Sync for text-based version
+
+Model
+    GameModel interface
+        - boolean isGameOver()
+            Returns if the game is over (has no moves left or one player has won)
+        - int winner()
+            Returns the winner of the game (0 for tie, 1 for lava, 2 for ice)
+        - char[][] getBoard()
+            Returns a copy of the board state as a 2D array of characters representing every
+            piece. Capitals are lava, lowercase are ice. A-J are pieces, T is trap, - is invalid
+        - List<BoardPosition> validMoves(BoardPosition)
+            Returns a list of positions where the piece located at the given position can move
+            without using its special ability
+        - List<BoardPosition> validSpecials(BoardPosition)
+            Returns a list of positions where the piece located at the given position can move using
+            its special ability
+        - void move(BoardPosition, BoardPosition)
+            Move the piece at the first position to the second position
+        - void special(BoardPosition, BoardPosition)
+            Move the piece at the first position to the second position using its special ability
+        - String specialName(char)
+            Return the name of the special ability the piece with the provided code can do
+
+    BoardPosition class
+        - int row
+        - int col
+
+    PlayerTheme enum
+        Enumeration:
+            - Lava
+            - Ice
+
+    GamePieceType enum
+        Enumeration:
+            - Slayer (1)
+            - Scout (2)
+            - Dwarf (3)
+            - Elf (4)
+            - LavaBeastYeti (5)
+            - Sorceress (6)
+            - BeastRider (7)
+            - Knight (8)
+            - Mage (9)
+            - Dragon (10)
+            - Trap
+            - Flag
+
+    GamePiece class
+        - GamePieceType type
+        - PlayerTheme belongsTo
+
+        Methods:
+            - int getValue()
+                Returns the value of this piece
+            - List<BoardPosition> validSpecialMoves(GamePiece[][], BoardPosition)
+                Returns where this piece can move on the given board from the given position using
+                this piece's special ability
+            - List<BoardPosition> validRegularMoves(GamePiece[][], BoardPosition)
+                Returns where this piece can move on the given board from the given position using
+                this piece's regular move ability
+
+    GameModelImpl class
+        - GamePiece[][] board
+
+        Methods:
+            - boolean isGameOver()
+                Returns if the game is over (has no moves left or one player has won)
+            - int winner()
+                Returns the winner of the game (0 for tie, 1 for lava, 2 for ice)
+            - char[][] getBoard()
+                Returns a copy of the board state as a 2D array of characters representing every
+                piece. Capitals are lava, lowercase are ice. A-J are pieces, T is trap, X is flag,
+                - is invalid, spaces are empty
+            - List<BoardPosition> validMoves(BoardPosition)
+                Returns a list of positions where the piece located at the given position can move
+                without using its special ability
+            - List<BoardPosition> validSpecials(BoardPosition)
+                Returns a list of positions where the piece located at the given position can move
+                using its special ability
+            - void move(BoardPosition, BoardPosition)
+                Move the piece at the first position to the second position
+            - void special(BoardPosition, BoardPosition)
+                Move the piece at the first position to the second position using its special
+                ability
+            - String specialName(char)
+                Return the name of the special ability the piece with the provided code can do
+
+Controller
+    GameSyncController interface
+        - void run()
+            Runs the game
+
+    GameSyncControllerImpl class
+        GameModel model
+        GameView view
+
+        Methods:
+            - void run()
+                Runs the game using the class's model and view
+
+View
+    GameView interface
+        - void displayBoard(char[][] board, int player)
+            Displays the given board to the user as the provided player (1 is lava, 2 is ice)
+        - void displayMessage(String message)
+            Displays the message to the user
+
+    GameTextView class
+        Methods:
+            - void displayBoard(char[][] board, int player)
+                Displays the given board to the user as the provided player (1 is lava, 2 is ice)
+            - void displayMessage(String message)
+                Displays the message to the user
